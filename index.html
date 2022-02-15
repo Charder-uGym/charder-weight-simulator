@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Charder 身高體重機模擬器</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+
+  <body>
+    <h1>Charder 身高體重計 模擬器 V0.1</h1>
+    <label id="snLabel" style="float:left;width:120px">機器 SN:</label>
+    <input id="snInput" style="float:left;width:330px"><br><br>
+    
+    <label id="idLabel" style="float:left;width:120px">User ID:</label>
+    <input id="idInput" style="float:left;width:330px"><br><br>
+    
+    <label id="nidLabel" style="float:left;width:120px">Nurse ID:</label>
+    <input id="nidInput" style="float:left;width:330px"><br><br>
+                  
+    <label id="tareLabel" style="float:left;width:120px">Tare Weight(kg):</label>
+    <input id="tareInput" style="float:left;width:330px"><br><br>
+    
+    <label id="netLabel" style="float:left;width:120px">Net Weight(kg):</label>
+    <input id="netInput" style="float:left;width:330px"><br><br>
+    
+    <label id="heightLabel" style="float:left;width:120px">Height(cm):</label>
+    <input id="heightInput" style="float:left;width:330px"><br><br>
+       
+    <label id="bmiLabel" style="float:left;width:120px">BMI:</label>
+    <input id="bmiInput" style="float:left;width:330px"><br><br>
+    
+    <label id="heightLabel" style="float:left;width:120px">量測時間:</label>
+    <input id="timeInput" style="float:left;width:330px"><br><br>       
+        
+    <button id="button1" onclick="upload1()">上傳一筆資料</button>
+      
+    <script src="./uploads.js"></script>
+    <script>
+      const url = "https://charder-weight-api.herokuapp.com/status?XAPIKEY=xG0y3ziAPN";
+      
+      var sample_rec = one_rec; //JSON.parse(one_rec);
+      
+      $("#snInput").val(sample_rec.sn);
+      $("#idInput").val(sample_rec.packet[0].id);
+      $("#nidInput").val(sample_rec.packet[0].nid);
+      $("#tareInput").val(sample_rec.packet[0].tare_weight);
+      $("#netInput").val(sample_rec.packet[0].net_weight);
+      $("#heightInput").val(sample_rec.packet[0].height);
+      $("#bmiInput").val(sample_rec.packet[0].bmi);
+      $("#timeInput").val(sample_rec.packet[0].time);
+      
+      function payload(){
+        sample_rec.sn                    = $("#snInput").val();
+        sample_rec.packet[0].id          = $("#idInput").val();
+        sample_rec.packet[0].nid         = $("#nidInput").val();
+        sample_rec.packet[0].tare_weight = $("#tareInput").val();
+        sample_rec.packet[0].net_weight  = $("#netInput").val();
+        sample_rec.packet[0].height      = $("#heightInput").val();
+        sample_rec.packet[0].bmi         = $("#bmiInput").val();
+        sample_rec.packet[0].time        = $("#timeInput").val();
+        
+      }
+      
+      async function upload1() {
+        console.log("Upload 1 rec");
+        //var data = {name: "said"};
+
+        payload();
+        
+        await fetch(url, {
+          method: 'POST', // or 'PUT'
+          body: JSON.stringify(sample_rec),
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          })
+        })
+        .then(res => {return res.json()})
+        .then(data =>{ resObj=data; console.log(resObj)})
+        .catch(error => console.error('Error:', error))
+        
+        console.log("Error:", resObj.Error);
+        console.log("Timestamp:", resObj.Timestamp);
+        
+        
+        
+      }
+      
+      
+    </script>
+
+  </body>
+
+</html>
+
