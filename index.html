@@ -37,7 +37,8 @@
       
     <script src="./uploads.js"></script>
     <script>
-      const url = "https://charder-weight-api.herokuapp.com/status?XAPIKEY=xG0y3ziAPN";
+      //const url = "https://charder-weight-api.herokuapp.com/status?XAPIKEY=xG0y3ziAPN";
+      const url = "http://localhost:5000/status?XAPIKEY=xG0y3ziAPN";
       
       var sample_rec = one_rec; //JSON.parse(one_rec);
       
@@ -70,7 +71,8 @@
         
         await fetch(url, {
           method: 'POST', // or 'PUT'
-          body: JSON.stringify(sample_rec),
+          //body: JSON.stringify(sample_rec),
+          body: JSON.stringify(three_rec),
           headers: new Headers({
             'Content-Type': 'application/json'
           })
