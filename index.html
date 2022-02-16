@@ -6,6 +6,9 @@
     <title>Charder 身高體重機模擬器</title>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+    <script>
+      var localAPI=false;
+    </script>
 
   <body>
     <h1>Charder 身高體重計 模擬器 V0.1</h1>
@@ -33,15 +36,29 @@
     <label id="heightLabel" style="float:left;width:120px">量測時間:</label>
     <input id="timeInput" style="float:left;width:330px"><br><br>       
         
-    <button id="button1" onclick="upload1()">上傳一筆資料</button>
+    <button id="button1" onclick="upload1()">上傳以上一筆資料</button><br><br>
+    <hr>
+    <button id="button2" onclick="upload3()">上傳三筆測試資料</button>
+    <hr>
+    <h1>查詢</h1>
+    <label id="idLabel" style="float:left;width:120px">User ID:</label>
+    <input id="idInputQ" style="float:left;width:330px"><br><br>     
+    <label id="snLabel" style="float:left;width:120px">機器 SN:</label>
+    <input id="snInputQ" style="float:left;width:330px"><br><br>
+  
+    <button id="button3" onclick="getDataByID()">Get Data By ID</button>
+    <button id="button3" onclick="getDataBySN()">Get Data by SN</button> <br><br>
+    
+    <textarea id="retData" cols="50" style="height:200px;width:450px"></textarea>        
       
     <script src="./uploads.js"></script>
     <script>
       //const url = "https://charder-weight-api.herokuapp.com/status?XAPIKEY=xG0y3ziAPN";
-      const url = "http://localhost:5000/status?XAPIKEY=xG0y3ziAPN";
+      var getUrl  = (localAPI)?"http://localhost:5000/?XAPIKEY=xG0y3ziAPN":"https://charder-weight-api.herokuapp.com/?XAPIKEY=xG0y3ziAPN";
+      var postUrl = (localAPI)?"http://localhost:5000/status?XAPIKEY=xG0y3ziAPN":"https://charder-weight-api.herokuapp.com/status?XAPIKEY=xG0y3ziAPN";
       
-      var sample_rec = one_rec; //JSON.parse(one_rec);
-      
+      console.log(getUrl);
+      var sample_rec = one_rec; //JSON.parse(one_rec); 
       $("#snInput").val(sample_rec.sn);
       $("#idInput").val(sample_rec.packet[0].id);
       $("#nidInput").val(sample_rec.packet[0].nid);
@@ -49,17 +66,47 @@
       $("#netInput").val(sample_rec.packet[0].net_weight);
       $("#heightInput").val(sample_rec.packet[0].height);
       $("#bmiInput").val(sample_rec.packet[0].bmi);
-      $("#timeInput").val(sample_rec.packet[0].time);
+      //$("#timeInput").val(sample_rec.packet[0].time);      
       
-      function payload(){
-        sample_rec.sn                    = $("#snInput").val();
-        sample_rec.packet[0].id          = $("#idInput").val();
-        sample_rec.packet[0].nid         = $("#nidInput").val();
-        sample_rec.packet[0].tare_weight = $("#tareInput").val();
-        sample_rec.packet[0].net_weight  = $("#netInput").val();
-        sample_rec.packet[0].height      = $("#heightInput").val();
-        sample_rec.packet[0].bmi         = $("#bmiInput").val();
-        sample_rec.packet[0].time        = $("#timeInput").val();
+      var nowDateTime = new Date(Date.now()+8*60*60*1000);
+      var nowDateTimeISO = nowDateTime.toISOString();
+          nowDateTimeISO = nowDateTimeISO.replace('T',' ');
+          nowDateTimeISO = nowDateTimeISO.split('.');
+      
+      $("#timeInput").val(nowDateTimeISO[0]);
+      
+      function payload(recNum){ 
+        if (recNum==1) {
+          sample_rec = one_rec; //JSON.parse(one_rec);        
+          sample_rec.sn                    = $("#snInput").val();
+          sample_rec.packet[0].id          = $("#idInput").val();
+          sample_rec.packet[0].nid         = $("#nidInput").val();
+          sample_rec.packet[0].tare_weight = $("#tareInput").val();
+          sample_rec.packet[0].net_weight  = $("#netInput").val();
+          sample_rec.packet[0].height      = $("#heightInput").val();
+          sample_rec.packet[0].bmi         = $("#bmiInput").val();
+          sample_rec.packet[0].time        = $("#timeInput").val();
+        } else if (recNum==3) {
+          sample_rec = three_rec; //JSON.parse(one_rec); 
+          var nowDateTime = new Date($("#timeInput").val());          
+          for (var i=0;i<3; i++) {
+            sample_rec.sn                    = $("#snInput").val();
+            sample_rec.packet[i].id          = $("#idInput").val();
+            sample_rec.packet[i].nid         = $("#nidInput").val();
+            sample_rec.packet[i].tare_weight = $("#tareInput").val();
+            sample_rec.packet[i].net_weight  = $("#netInput").val();
+            sample_rec.packet[i].height      = $("#heightInput").val();
+            sample_rec.packet[i].bmi         = $("#bmiInput").val();
+            
+
+            var nowDateTimeISO = new Date(nowDateTime.getTime()+(i+8)*60*60*1000).toISOString();
+                nowDateTimeISO = nowDateTimeISO.replace('T',' ');
+                nowDateTimeISO = nowDateTimeISO.split('.');
+            
+            sample_rec.packet[i].time        = nowDateTimeISO[0];  
+          }
+          
+        }
         
       }
       
@@ -67,12 +114,11 @@
         console.log("Upload 1 rec");
         //var data = {name: "said"};
 
-        payload();
+        payload(1);
         
-        await fetch(url, {
-          method: 'POST', // or 'PUT'
-          //body: JSON.stringify(sample_rec),
-          body: JSON.stringify(three_rec),
+        await fetch(postUrl, {
+          method: 'POST', 
+          body: JSON.stringify(sample_rec),
           headers: new Headers({
             'Content-Type': 'application/json'
           })
@@ -83,10 +129,61 @@
         
         console.log("Error:", resObj.Error);
         console.log("Timestamp:", resObj.Timestamp);
-        
-        
-        
+                
       }
+      
+      async function upload3() {
+        console.log("Upload 3 rec");
+        //var data = {name: "said"};
+
+        payload(3);
+        
+        await fetch(postUrl, {
+          method: 'POST', 
+          body: JSON.stringify(sample_rec),
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          })
+        })
+        .then(res => {return res.json()})
+        .then(data =>{ resObj=data; console.log(resObj)})
+        .catch(error => console.error('Error:', error))
+        
+        console.log("Error:", resObj.Error);
+        console.log("Timestamp:", resObj.Timestamp);
+                
+      }
+      
+      async function getDataByID() {
+        console.log("Get Data ID");
+
+        var UserIDQ = $("#idInputQ").val();
+        if (UserIDQ=='') {
+          alert("查詢 UserID 不得為空白");
+          return;
+        }
+        
+        fetch(getUrl+'&API=33&UserId='+UserIDQ)
+          .then(res => { return res.json()})
+          .then(data =>{ resObj=data; console.log(resObj); $("#retData").text(JSON.stringify(data));})
+          .catch(error => console.error('Error:', error))                     
+      } 
+      
+      async function getDataBySN() {
+        console.log("Get Data SN");
+
+        var SNQ = $("#snInputQ").val();
+        if (SNQ=='') {
+          alert("查詢 SN 不得為空白");
+          return;
+        }
+        
+        $("#retData").text('');
+        fetch(getUrl+'&API=34&SN='+SNQ)
+          .then(res => { return res.json()})
+          .then(data =>{ resObj=data; console.log(resObj); $("#retData").text(JSON.stringify(data));})
+          .catch(error => console.error('Error:', error))                     
+      }      
       
       
     </script>

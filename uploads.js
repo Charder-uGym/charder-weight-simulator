@@ -18,7 +18,7 @@ var one_rec =
   ]
 };
 
-var two_rec = `
+var two_rec = 
 {
   "title":"measure",
   "model":"DP4800",
@@ -42,7 +42,7 @@ var two_rec = `
       "index":"3"
     }
   ]
-}`;
+};
 
 var three_rec = 
 {
