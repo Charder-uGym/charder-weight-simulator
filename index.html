@@ -156,21 +156,21 @@
 
         payload(1);
         
-        res = await callPostAPI(sample_rec);         
+        //res = await callPostAPI(sample_rec);         
         
-//        await fetch(postUrl, {
-//          method: 'POST', 
-//          body: JSON.stringify(sample_rec),
-//          headers: new Headers({
-//            'Content-Type': 'application/json'
-//          })
-//        })
-//        .then(res => {return res.json()})
-//        .then(data =>{ resObj=data; console.log(resObj)})
-//        .catch(error => console.error('Error:', error))
-//        
-//        console.log("Error:", resObj.Error);
-//        console.log("Timestamp:", resObj.Timestamp);
+        await fetch(postUrl, {
+          method: 'POST', 
+          body: JSON.stringify(sample_rec),
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          })
+        })
+        .then(res => {return res.json()})
+        .then(data =>{ resObj=data; console.log(resObj)})
+        .catch(error => console.error('Error:', error))
+        
+        console.log("Error:", resObj.Error);
+        console.log("Timestamp:", resObj.Timestamp);
                 
       }
       
