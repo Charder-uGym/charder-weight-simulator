@@ -77,7 +77,7 @@
   <script> 
     //配合啟德 "chdr-weight.herokuapp.com" 不要超過 22 字元
     var getUrl  = (localAPI)?"http://localhost:5000/?XAPIKEY=xG0y3ziAPN":"https://chdr-weight.herokuapp.com/?XAPIKEY=xG0y3ziAPN";
-    var postUrl = (localAPI)?"http://localhost:5000/status?XAPIKEY=xG0y3ziAPN":"https:/chdr-weight.herokuapp.com/status?XAPIKEY=xG0y3ziAPN";      
+    var postUrl = (localAPI)?"http://localhost:5000/status?XAPIKEY=xG0y3ziAPN":"https:/chdr-weight.herokuapp.com/";      
     console.log(getUrl);
     var sample_rec = one_rec; //JSON.parse(one_rec); 
     $("#snInput").val(sample_rec.sn);
@@ -98,13 +98,14 @@
     
       
     
-    // 上傳
+    // 上傳  
     async function upload1() {
       console.log("Upload 1 rec", postUrl);
 
       payload(1);  
       console.log(sample_rec);      
-      await callPostAPI("", sample_rec)  
+      //await callPostAPI("", sample_rec)  
+      await callPostData(sample_rec)  
     }
     
     async function upload3() {
@@ -112,8 +113,34 @@
 
       payload(3);  
       console.log(sample_rec);      
-      await callPostAPI("", sample_rec)  
+      //await callPostAPI("", sample_rec)  
+      await callPostData(sample_rec)       
     }    
+    
+    async function callPostData(dataToPost){
+      paramToSend = "status?XAPIKEY=xG0y3ziAPN"; 
+      res = await callPostAPI(paramToSend, dataToPost);      
+    }    
+    
+//    async function postStatus(status){
+//      if (!powerIsOn) {
+//        console.log("Power is not on, tuen on power first");
+//        //$("#machineStatus").text("請先打開機器電源");
+//        alert("請先打開機器電源");
+//        return;
+//      }      
+//      console.log(status);
+//      $("#machineStatus").text(status);
+//      
+//      var postData = dataToPost[status];    
+//      console.log(postData);
+//      $("#post_timeStamp").text(postData.Timestamp);
+//      $("#post_status").text("status: "+String(postData.status));      
+//      
+//      await callPostData(postData);
+//      //$("#postCloudResponse").text(postResponse);      
+//                  
+//    }    
     
     // 查詢
     async function getDataByID() {
