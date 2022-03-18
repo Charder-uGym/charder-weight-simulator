@@ -113,42 +113,42 @@
         
       }
       
-      function callGetAPI(param) {      
-        return new Promise(function(resolve, reject) {       
-          var request = new XMLHttpRequest();
-          request.open('GET', getUrl +param, true);
-
-          request.onload = function() {
-            //$.loading.end();
-            //console.log(this.response);
-
-            resolve(this.response);
-          }
-          // Send API request 
-          //$.loading.start(loadingMessage);
-
-          request.send();    
-        });
-      }
-      
-      function callPostAPI(dataToPost) {
-        return new Promise(function(resolve, reject) {       
-          var request = new XMLHttpRequest();   // new HttpRequest instance 
-          //console.log(apiSite +param);
-          request.open("POST", postUrl, true);
-          request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-
-          request.onload = function() { 
-            console.log(this.response); 
-            postResponse = "Response:"+this.response; 
-            $("#postCloudResponse").text(postResponse); 
-
-          }  
-
-          //console.log(JSON.stringify(dataToPost));
-          request.send(JSON.stringify(dataToPost));  
-        });
-      }
+//      function callGetAPI(param) {      
+//        return new Promise(function(resolve, reject) {       
+//          var request = new XMLHttpRequest();
+//          request.open('GET', getUrl +param, true);
+//
+//          request.onload = function() {
+//            //$.loading.end();
+//            //console.log(this.response);
+//
+//            resolve(this.response);
+//          }
+//          // Send API request 
+//          //$.loading.start(loadingMessage);
+//
+//          request.send();    
+//        });
+//      }
+//      
+//      function callPostAPI(dataToPost) {
+//        return new Promise(function(resolve, reject) {       
+//          var request = new XMLHttpRequest();   // new HttpRequest instance 
+//          //console.log(apiSite +param);
+//          request.open("POST", postUrl, true);
+//          request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+//
+//          request.onload = function() { 
+//            console.log(this.response); 
+//            postResponse = "Response:"+this.response; 
+//            $("#postCloudResponse").text(postResponse); 
+//
+//          }  
+//
+//          //console.log(JSON.stringify(dataToPost));
+//          request.send(JSON.stringify(dataToPost));  
+//        });
+//      }
       
       async function upload1() {
         console.log("Upload 1 rec", postUrl);
@@ -179,21 +179,21 @@
         //var data = {name: "said"};
 
         payload(3);
-        res = await callPostAPI(sample_rec);    
+        //res = await callPostAPI(sample_rec);    
         
-//        await fetch(postUrl, {
-//          method: 'POST', 
-//          body: JSON.stringify(sample_rec),
-//          headers: new Headers({
-//            'Content-Type': 'application/json'
-//          })
-//        })
-//        .then(res => {return res.json()})
-//        .then(data =>{ resObj=data; console.log(resObj)})
-//        .catch(error => console.error('Error:', error))
-//        
-//        console.log("Error:", resObj.Error);
-//        console.log("Timestamp:", resObj.Timestamp);
+        await fetch(postUrl, {
+          method: 'POST', 
+          body: JSON.stringify(sample_rec),
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          })
+        })
+        .then(res => {return res.json()})
+        .then(data =>{ resObj=data; console.log(resObj)})
+        .catch(error => console.error('Error:', error))
+        
+        console.log("Error:", resObj.Error);
+        console.log("Timestamp:", resObj.Timestamp);
                 
       }
       
@@ -207,15 +207,15 @@
         }
 
         $("#retData").text('');
-        res = await callGetAPI('&API=33&UserId='+UserIDQ);
-        //console.log(JSON.parse(res));
-        $("#retData").text(res);
+//        res = await callGetAPI('&API=33&UserId='+UserIDQ);
+//        //console.log(JSON.parse(res));
+//        $("#retData").text(res);
         
         
-//        fetch(getUrl+'&API=33&UserId='+UserIDQ)
-//          .then(res => { return res.json()})
-//          .then(data =>{ resObj=data; console.log(resObj); $("#retData").text(JSON.stringify(data));})
-//          .catch(error => console.error('Error:', error))                     
+        fetch(getUrl+'&API=33&UserId='+UserIDQ)
+          .then(res => { return res.json()})
+          .then(data =>{ resObj=data; console.log(resObj); $("#retData").text(JSON.stringify(data));})
+          .catch(error => console.error('Error:', error))                     
       } 
       
       async function getDataBySN() {
@@ -228,14 +228,14 @@
         }
         
         $("#retData").text('');
-        res = await callGetAPI('&API=34&SN='+SNQ);
-        //console.log(JSON.parse(res));
-        $("#retData").text(res);        
+//        res = await callGetAPI('&API=34&SN='+SNQ);
+//        //console.log(JSON.parse(res));
+//        $("#retData").text(res);        
         
-//        fetch(getUrl+'&API=34&SN='+SNQ)
-//          .then(res => { return res.json()})
-//          .then(data =>{ resObj=data; console.log(resObj); $("#retData").text(JSON.stringify(data));})
-//          .catch(error => console.error('Error:', error))                     
+        fetch(getUrl+'&API=34&SN='+SNQ)
+          .then(res => { return res.json()})
+          .then(data =>{ resObj=data; console.log(resObj); $("#retData").text(JSON.stringify(data));})
+          .catch(error => console.error('Error:', error))                     
       }      
       
       
