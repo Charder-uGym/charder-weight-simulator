@@ -113,6 +113,24 @@
         
       }
       
+      function callGetAPI(param) {      
+        return new Promise(function(resolve, reject) {       
+          var request = new XMLHttpRequest();
+          request.open('GET', getUrl +param, true);
+
+          request.onload = function() {
+            //$.loading.end();
+            //console.log(this.response);
+
+            resolve(this.response);
+          }
+          // Send API request 
+          //$.loading.start(loadingMessage);
+
+          request.send();    
+        });
+      }
+      
       function callPostAPI(dataToPost) {
         return new Promise(function(resolve, reject) {       
           var request = new XMLHttpRequest();   // new HttpRequest instance 
@@ -187,11 +205,17 @@
           alert("查詢 UserID 不得為空白");
           return;
         }
+
+        $("#retData").text('');
+        res = await callGetAPI('&API=33&UserId='+UserIDQ);
+        //console.log(JSON.parse(res));
+        $("#retData").text(res);
         
-        fetch(getUrl+'&API=33&UserId='+UserIDQ)
-          .then(res => { return res.json()})
-          .then(data =>{ resObj=data; console.log(resObj); $("#retData").text(JSON.stringify(data));})
-          .catch(error => console.error('Error:', error))                     
+        
+//        fetch(getUrl+'&API=33&UserId='+UserIDQ)
+//          .then(res => { return res.json()})
+//          .then(data =>{ resObj=data; console.log(resObj); $("#retData").text(JSON.stringify(data));})
+//          .catch(error => console.error('Error:', error))                     
       } 
       
       async function getDataBySN() {
@@ -204,10 +228,14 @@
         }
         
         $("#retData").text('');
-        fetch(getUrl+'&API=34&SN='+SNQ)
-          .then(res => { return res.json()})
-          .then(data =>{ resObj=data; console.log(resObj); $("#retData").text(JSON.stringify(data));})
-          .catch(error => console.error('Error:', error))                     
+        res = await callGetAPI('&API=34&SN='+SNQ);
+        //console.log(JSON.parse(res));
+        $("#retData").text(res);        
+        
+//        fetch(getUrl+'&API=34&SN='+SNQ)
+//          .then(res => { return res.json()})
+//          .then(data =>{ resObj=data; console.log(resObj); $("#retData").text(JSON.stringify(data));})
+//          .catch(error => console.error('Error:', error))                     
       }      
       
       
