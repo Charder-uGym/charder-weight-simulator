@@ -126,6 +126,7 @@
     } else {
       var apiSite="https://charder-test-api.herokuapp.com/"; 
       var apiSite="https://instant-fitness-charder-api.herokuapp.com/"; 
+      var apiSite="https:/chdr-weight.herokuapp.com/"; 
     }
     
     var paramToSend;   
@@ -323,25 +324,16 @@
     var postResponse;
     async function callPostData(dataToPost){
       //http://localhost:5000/status?XAPIKEY=LAotO6ljsV7rPLiT&Device_id=T00000001
-      paramToSend = "status?XAPIKEY=LAotO6ljsV7rPLiT&Device_id="+$("#machineSN_select").val(); 
+      //paramToSend = "status?XAPIKEY=LAotO6ljsV7rPLiT&Device_id="+$("#machineSN_select").val(); 
+      paramToSend = "status?XAPIKEY=xG0y3ziAPN"; 
       res = await callPostAPI(paramToSend, dataToPost);      
     }
     
-    function callPostAPI(param, dataToPost){
-      var testData={
-          "params": {
-              "token_id": "rfid_token",
-              "login_dict": {
-                  "rf_id": "test-rfid",
-
-                  "wifi_mac": "AA:BB:CC:DD:EE:FF"
-              }
-          }
-      };
-      
+    function callPostAPI(param, dataToPost) {
       return new Promise(function(resolve, reject) {       
         var request = new XMLHttpRequest();   // new HttpRequest instance 
-        request.open("POST", "https://ptsv2.com/t/aaa/post", true);
+        //console.log(apiSite +param);
+        request.open("POST", apiSite +param, true);
         request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
         request.onload = function() { 
@@ -353,26 +345,8 @@
 
         //console.log(JSON.stringify(dataToPost));
         request.send(JSON.stringify(dataToPost));  
-      });      
+      });
     }
-//    function callPostAPI(param, dataToPost) {
-//      return new Promise(function(resolve, reject) {       
-//        var request = new XMLHttpRequest();   // new HttpRequest instance 
-//        //console.log(apiSite +param);
-//        request.open("POST", apiSite +param, true);
-//        request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-//
-//        request.onload = function() { 
-//          console.log(this.response); 
-//          postResponse = "Response:"+this.response; 
-//          $("#postCloudResponse").text(postResponse); 
-//          
-//        }  
-//
-//        //console.log(JSON.stringify(dataToPost));
-//        request.send(JSON.stringify(dataToPost));  
-//      });
-//    }
     
     function powerToggle(){
       console.log("powerToggle", powerIsOn);
